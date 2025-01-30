@@ -36,7 +36,7 @@ A serverless web application that adds customizable banners to images. Built wit
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/yourusername/bannanigans.git
+   git clone https://github.com/conradkbarrett/bannanigans.git
    cd bannanigans
    ```
 
