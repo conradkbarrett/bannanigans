@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bannanigans - Debug Logs</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: #f8f9fa;
+            padding: 20px;
+        }
+        .log-entry {
+            font-family: monospace;
+            margin-bottom: 10px;
+            padding: 10px;
+            border-radius: 4px;
+            word-wrap: break-word;
+            white-space: pre-wrap;
+        }
+        .log-info { background: #e3f2fd; }
+        .log-error { background: #ffebee; }
+        .log-success { background: #e8f5e9; }
+        #statusBadge {
+            font-size: 0.9rem;
+            padding: 0.5em 1em;
+        }
+        .copy-button {
+            position: absolute;
+            right: 1rem;
+            top: 1rem;
+        }
+        .json-view {
+            background: #f8f9fa;
+            padding: 10px;
+            border-radius: 4px;
+            margin-top: 10px;
+            font-family: monospace;
+            white-space: pre-wrap;
+        }
+        .endpoint-status {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            margin-right: 5px;
+        }
+        .endpoint-status.success { background: #28a745; }
+        .endpoint-status.error { background: #dc3545; }
+        .endpoint-status.unknown { background: #ffc107; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="row mb-4">
+            <div class="col">
+                <h1 class="display-6">Bannanigans Debug Logs</h1>
+                <div class="d-flex align-items-center gap-3 mb-3">
+                    <span id="statusBadge" class="badge bg-secondary">Checking status...</span>
+                    <button class="btn btn-primary btn-sm" onclick="checkFunctionStatus()">Check Function Status</button>
+                    <button class="btn btn-info btn-sm" onclick="testDiagnostics()">Run Diagnostics</button>
+                    <button class="btn btn-warning btn-sm" onclick="clearLogs()">Clear Logs</button>
+                </div>
+                <div class="endpoint-list mb-3">
+                    <h6>Endpoint Status:</h6>
+                    <div id="endpointStatuses"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col">
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0">System Logs</h5>
+                        <button class="btn btn-outline-secondary btn-sm copy-button" onclick="copyLogs()">Copy Logs</button>
+                    </div>
+                    <div class="card-body">
+                        <div id="logContainer"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function addLog(message, type = 'info') {
+            const logContainer = document.getElementById('logContainer');
+            const logEntry = document.createElement('div');
+            logEntry.className = `log-entry log-${type}`;
+            logEntry.textContent = `[${new Date().toISOString()}] ${message}`;
+            logContainer.insertBefore(logEntry, logContainer.firstChild);
+        }
+
+        function clearLogs() {
+            document.getElementById('logContainer').innerHTML = '';
+            addLog('Logs cleared', 'info');
+        }
+
+        function copyLogs() {
+            const logs = Array.from(document.querySelectorAll('.log-entry'))
+                .map(entry => entry.textContent)
+                .join('\n');
+            navigator.clipboard.writeText(logs)
+                .then(() => alert('Logs copied to clipboard!'))
+                .catch(err => console.error('Failed to copy logs:', err));
+        }
+
+        function formatJSON(obj) {
+            return JSON.stringify(obj, null, 2);
+        }
+
+        function updateEndpointStatus(endpoint, status) {
+            const statusesDiv = document.getElementById('endpointStatuses');
+            const statusClass = status === 200 ? 'success' : status === 404 ? 'error' : 'unknown';
+            const statusHtml = `
+                <div class="mb-2">
+                    <span class="endpoint-status ${statusClass}"></span>
+                    ${endpoint} - ${status}
+                </div>
+            `;
+            if (!document.querySelector(`[data-endpoint="${endpoint}"]`)) {
+                const div = document.createElement('div');
+                div.setAttribute('data-endpoint', endpoint);
+                div.innerHTML = statusHtml;
+                statusesDiv.appendChild(div);
+            } else {
+                document.querySelector(`[data-endpoint="${endpoint}"]`).innerHTML = statusHtml;
+            }
+        }
+
+        async function testDiagnostics() {
+            addLog('Running diagnostics test...', 'info');
+            try {
+                const response = await fetch('/.netlify/functions/test');
+                addLog(`Response status: ${response.status}`, 'info');
+                
+                const contentType = response.headers.get('content-type');
+                addLog(`Content-Type: ${contentType}`, 'info');
+                
+                const text = await response.text();
+                addLog(`Raw response: ${text}`, 'info');
+                
+                if (!response.ok) {
+                    addLog(`Diagnostics test failed: ${response.status}`, 'error');
+                    return;
+                }
+
+                try {
+                    const data = JSON.parse(text);
+                    addLog('Diagnostics test successful', 'success');
+                    addLog(`Response data:\n${formatJSON(data)}`, 'info');
+                } catch (parseError) {
+                    addLog(`Error parsing JSON: ${parseError.message}`, 'error');
+                    addLog('Raw response:', 'info');
+                    addLog(text, 'info');
+                }
+            } catch (error) {
+                addLog(`Error running diagnostics: ${error.message}`, 'error');
+            }
+        }
+
+        async function checkFunctionStatus() {
+            const statusBadge = document.getElementById('statusBadge');
+            const endpoints = [
+                { url: '/.netlify/functions/test', method: 'GET' },
+                { url: '/api/process', method: 'OPTIONS' },
+                { url: '/.netlify/functions/process', method: 'GET' }
+            ];
+
+            addLog('Checking function endpoints...', 'info');
+            statusBadge.className = 'badge bg-warning';
+            statusBadge.textContent = 'Checking...';
+
+            for (const endpoint of endpoints) {
+                try {
+                    addLog(`Testing endpoint: ${endpoint.url}`, 'info');
+                    const response = await fetch(endpoint.url, {
+                        method: endpoint.method,
+                        headers: {
+                            'Content-Type': 'application/json'
+                        }
+                    });
+
+                    const statusText = `${response.status} ${response.statusText}`;
+                    updateEndpointStatus(endpoint.url, response.status);
+                    addLog(`Response from ${endpoint.url}: ${statusText}`, response.ok ? 'success' : 'error');
+
+                    try {
+                        const text = await response.text();
+                        if (text) {
+                            addLog(`Response body:\n${text}`, 'info');
+                        }
+                    } catch (e) {
+                        addLog(`No response body or empty response`, 'info');
+                    }
+
+                } catch (error) {
+                    addLog(`Error testing ${endpoint.url}: ${error.message}`, 'error');
+                    updateEndpointStatus(endpoint.url, 'Error');
+                }
+            }
+
+            // Check environment
+            addLog('Checking environment...', 'info');
+            const envInfo = {
+                'URL': window.location.href,
+                'Protocol': window.location.protocol,
+                'Host': window.location.host,
+                'Pathname': window.location.pathname,
+                'User Agent': navigator.userAgent
+            };
+
+            Object.entries(envInfo).forEach(([key, value]) => {
+                addLog(`${key}: ${value}`, 'info');
+            });
+
+            // Update status badge
+            const anyErrors = document.querySelectorAll('.log-error').length > 0;
+            const anySuccess = document.querySelectorAll('.log-success').length > 0;
+            
+            if (anyErrors && !anySuccess) {
+                statusBadge.className = 'badge bg-danger';
+                statusBadge.textContent = 'Function Unreachable';
+            } else if (anySuccess) {
+                statusBadge.className = 'badge bg-success';
+                statusBadge.textContent = 'Function Available';
+            } else {
+                statusBadge.className = 'badge bg-warning';
+                statusBadge.textContent = 'Status Unknown';
+            }
+        }
+
+        // Initial check on page load
+        window.addEventListener('load', () => {
+            addLog('Debug page loaded', 'info');
+            checkFunctionStatus();
+            testDiagnostics();
+        });
+    </script>
+</body>
+</html> 

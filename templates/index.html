@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bannanigans</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --stripe-purple: #635bff;
+            --stripe-purple-hover: #5851e6;
+            --stripe-light: #f6f9fc;
+            --stripe-border: #e6e6e6;
+            --stripe-text: #425466;
+            --stripe-heading: #1a1f36;
+            --gradient-start: #7a73ff;
+            --gradient-end: #635bff;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(150deg, #f6f9fc 15%, #ffffff 70%, #f3f7fa 94%);
+            color: var(--stripe-text);
+            min-height: 100vh;
+        }
+
+        .header-section {
+            background: linear-gradient(135deg, var(--gradient-start) 0%, var(--gradient-end) 100%);
+            padding: 0.5rem 0;
+            margin-bottom: 1rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='rgba(255,255,255,0.05)' fill-rule='evenodd'/%3E%3C/svg%3E");
+            opacity: 0.5;
+        }
+
+        .header-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .header-title {
+            color: white;
+            font-weight: 700;
+            font-size: 1.5rem;
+            letter-spacing: -0.5px;
+            margin-bottom: 0;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .header-subtitle {
+            color: rgba(255,255,255,0.9);
+            font-size: 0.8rem;
+            font-weight: 400;
+            max-width: 600px;
+            margin: 0 auto;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.1);
+            font-style: italic;
+
+        }
+
+        h1 {
+            color: var(--stripe-heading);
+            font-weight: 600;
+            font-size: 2.2rem;
+            letter-spacing: -0.5px;
+        }
+
+        .card {
+            border: none;
+            box-shadow: 0 2px 5px -1px rgba(50,50,93,.25), 0 1px 3px -1px rgba(0,0,0,.3);
+            border-radius: 8px;
+            background: white;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 6px -1px rgba(50,50,93,.25), 0 2px 4px -1px rgba(0,0,0,.3);
+        }
+
+        .preview-container {
+            max-width: 100%;
+            overflow: hidden;
+            margin-top: 20px;
+            position: relative;
+            border-radius: 6px;
+        }
+
+        #imagePreview {
+            max-width: 100%;
+            height: auto;
+            border-radius: 6px;
+        }
+
+        .sticky-preview {
+            position: sticky;
+            top: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            font-weight: 500;
+            color: var(--stripe-heading);
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .form-control {
+            border: 1px solid var(--stripe-border);
+            border-radius: 6px;
+            padding: 0.75rem;
+            font-size: 0.95rem;
+            transition: all 0.15s ease;
+        }
+
+        .form-control:focus {
+            border-color: var(--stripe-purple);
+            box-shadow: 0 0 0 4px rgba(99,91,255,.15);
+        }
+
+        .position-picker {
+            display: grid;
+            grid-template-rows: repeat(3, 1fr);
+            gap: 8px;
+            margin: 15px 0;
+        }
+
+        .position-option, .text-align-option {
+            padding: 12px;
+            text-align: center;
+            border: 1px solid var(--stripe-border);
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            font-size: 0.95rem;
+            background: white;
+        }
+
+        .position-option:hover, .text-align-option:hover {
+            border-color: var(--stripe-purple);
+            background: var(--stripe-light);
+        }
+
+        .position-option.selected, .text-align-option.selected {
+            background: var(--stripe-purple);
+            color: white;
+            border-color: var(--stripe-purple);
+        }
+
+        .text-align-options {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 15px;
+        }
+
+        .text-align-option {
+            flex: 1;
+        }
+
+        .font-preview {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.2em;
+            margin-top: 8px;
+            padding: 12px;
+            border: 1px solid var(--stripe-border);
+            border-radius: 6px;
+            background: var(--stripe-light);
+        }
+
+        .btn-primary {
+            background: var(--stripe-purple);
+            border: none;
+            padding: 12px 24px;
+            font-weight: 500;
+            letter-spacing: 0.3px;
+            box-shadow: 0 1px 3px 0 rgba(0,0,0,.1), 0 1px 2px 0 rgba(0,0,0,.06);
+            transition: all 0.15s ease;
+        }
+
+        .btn-primary:hover {
+            background: var(--stripe-purple-hover);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 6px -1px rgba(50,50,93,.25), 0 2px 4px -1px rgba(0,0,0,.3);
+        }
+
+        .btn-success {
+            background: #24b47e;
+            border: none;
+            padding: 12px 24px;
+            font-weight: 500;
+            letter-spacing: 0.3px;
+            box-shadow: 0 1px 3px 0 rgba(0,0,0,.1), 0 1px 2px 0 rgba(0,0,0,.06);
+            transition: all 0.15s ease;
+        }
+
+        .btn-success:hover {
+            background: #1ea76d;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 6px -1px rgba(50,50,93,.25), 0 2px 4px -1px rgba(0,0,0,.3);
+        }
+
+        .form-range {
+            height: 6px;
+            border-radius: 3px;
+        }
+
+        .form-range::-webkit-slider-thumb {
+            background: var(--stripe-purple);
+            box-shadow: 0 1px 3px rgba(0,0,0,.3);
+        }
+
+        .form-check-input:checked {
+            background-color: var(--stripe-purple);
+            border-color: var(--stripe-purple);
+        }
+
+        .form-control-color {
+            width: 60px;
+            padding: 4px;
+            height: 38px;
+        }
+
+        .card-title {
+            color: var(--stripe-heading);
+            font-weight: 600;
+            font-size: 1.1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        select.form-control {
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23343a40' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2 5l6 6 6-6'/%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 0.75rem center;
+            background-size: 16px 12px;
+            appearance: none;
+        }
+
+        .container {
+            max-width: 1200px;
+            padding: 2rem 1rem;
+        }
+
+        @media (min-width: 768px) {
+            .container {
+                padding: 3rem 2rem;
+            }
+        }
+    </style>
+</head>
+<body class="bg-light">
+    <div class="header-section">
+        <div class="header-content">
+            <div class="container">
+                <div class="text-center">
+                    <h1 class="header-title">Bannanigans</h1>
+                    <p class="header-subtitle">Transform your images in seconds</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="row g-4">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-body p-4">
+                        <form id="uploadForm" class="needs-validation" novalidate>
+                            <div class="form-group">
+                                <label class="form-label d-flex justify-content-between align-items-center">
+                                    Upload Image
+                                    <small class="text-muted">Supported: JPG, PNG</small>
+                                </label>
+                                <input type="file" class="form-control" id="image" name="image" accept=".jpg,.jpeg,.png" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">Banner Text</label>
+                                <div class="mb-2">
+                                    <input type="text" class="form-control" name="banner_text[]" placeholder="Primary text">
+                                </div>
+                                <div class="mb-2">
+                                    <input type="text" class="form-control" name="banner_text[]" placeholder="Secondary text">
+                                </div>
+                                <div>
+                                    <input type="text" class="form-control" name="banner_text[]" placeholder="Additional text">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">Banner Position</label>
+                                <div class="position-picker">
+                                    <div class="position-option" data-position="top">Top</div>
+                                    <div class="position-option" data-position="middle">Middle</div>
+                                    <div class="position-option" data-position="bottom">Bottom</div>
+                                </div>
+                                <input type="hidden" name="banner_position" id="banner_position" value="top">
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">Text Alignment</label>
+                                <div class="text-align-options">
+                                    <div class="text-align-option" data-align="left">Left</div>
+                                    <div class="text-align-option" data-align="center">Center</div>
+                                    <div class="text-align-option" data-align="right">Right</div>
+                                </div>
+                                <input type="hidden" name="text_align" id="text_align" value="left">
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label" for="font_weight">Font Style</label>
+                                <select class="form-control" id="font_weight" name="font_weight">
+                                    <option value="thin">Thin (100)</option>
+                                    <option value="extralight">Extra Light (200)</option>
+                                    <option value="light">Light (300)</option>
+                                    <option value="regular">Regular (400)</option>
+                                    <option value="medium">Medium (500)</option>
+                                    <option value="semibold">Semi Bold (600)</option>
+                                    <option value="bold" selected>Bold (700)</option>
+                                    <option value="extrabold">Extra Bold (800)</option>
+                                    <option value="black">Black (900)</option>
+                                </select>
+                                <div class="form-check mt-2">
+                                    <input class="form-check-input" type="checkbox" name="font_style[]" value="italic" id="fontItalic">
+                                    <label class="form-check-label" for="fontItalic">
+                                        <em>Italic</em>
+                                    </label>
+                                </div>
+                                <div class="font-preview mt-2" id="fontPreview">Preview Text</div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label d-flex justify-content-between" for="font_size">
+                                    Font Size
+                                    <span class="text-muted" id="fontSizeValue">40px</span>
+                                </label>
+                                <input type="range" class="form-range" id="font_size" name="font_size" value="40" min="20" max="200">
+                                <div class="d-flex justify-content-between mt-1">
+                                    <small class="text-muted">20px</small>
+                                    <small class="text-muted">200px</small>
+                                </div>
+                            </div>
+
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="form-label" for="text_color">Text Color</label>
+                                        <input type="color" class="form-control form-control-color w-100" id="text_color" name="text_color" value="#FFFFFF">
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="form-label" for="banner_color">Banner Color</label>
+                                        <input type="color" class="form-control form-control-color w-100" id="banner_color" name="banner_color" value="#000000">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <button type="submit" class="btn btn-primary w-100 mt-4">Generate Banner</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-6">
+                <div class="card sticky-preview">
+                    <div class="card-body p-4">
+                        <div class="d-flex justify-content-between align-items-center mb-4">
+                            <h5 class="card-title m-0">Preview</h5>
+                            <a id="downloadLink" class="btn btn-success" style="display: none;">Download Image</a>
+                        </div>
+                        <div class="preview-container">
+                            <img id="imagePreview" src="" style="display: none;">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Debounce function to limit API calls
+        function debounce(func, wait) {
+            let timeout;
+            return function executedFunction(...args) {
+                const later = () => {
+                    clearTimeout(timeout);
+                    func(...args);
+                };
+                clearTimeout(timeout);
+                timeout = setTimeout(later, wait);
+            };
+        }
+
+        // Function to update preview
+        async function updatePreview() {
+            const form = document.getElementById('uploadForm');
+            const formData = new FormData(form);
+            
+            // Only proceed if an image has been selected
+            const imageFile = formData.get('image');
+            if (!imageFile || !imageFile.name) {
+                console.log('No image selected, skipping preview update');
+                return;
+            }
+            
+            try {
+                const response = await fetch('/upload', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                const data = await response.json();
+                
+                if (data.error) {
+                    console.error(data.error);
+                    return;
+                }
+                
+                // Update preview with timestamp to prevent caching
+                const preview = document.getElementById('imagePreview');
+                preview.src = `/download/${data.filename}?t=${Date.now()}`;
+                preview.style.display = 'block';
+                
+                // Update download link
+                const downloadLink = document.getElementById('downloadLink');
+                downloadLink.href = `/download/${data.filename}`;
+                downloadLink.style.display = 'block';
+                
+            } catch (error) {
+                console.error('Error updating preview:', error);
+            }
+        }
+
+        // Debounced version of updatePreview
+        const debouncedUpdatePreview = debounce(updatePreview, 500);
+
+        // Initialize position pickers
+        document.querySelectorAll('.position-option').forEach(option => {
+            option.addEventListener('click', function() {
+                document.querySelectorAll('.position-option').forEach(opt => opt.classList.remove('selected'));
+                this.classList.add('selected');
+                document.getElementById('banner_position').value = this.dataset.position;
+                debouncedUpdatePreview();
+            });
+        });
+
+        // Initialize text alignment options
+        document.querySelectorAll('.text-align-option').forEach(option => {
+            option.addEventListener('click', function() {
+                document.querySelectorAll('.text-align-option').forEach(opt => opt.classList.remove('selected'));
+                this.classList.add('selected');
+                document.getElementById('text_align').value = this.dataset.align;
+                debouncedUpdatePreview();
+            });
+        });
+
+        // Font preview functionality
+        function updateFontPreview() {
+            const preview = document.getElementById('fontPreview');
+            const weight = document.getElementById('font_weight').value;
+            const isItalic = document.getElementById('fontItalic').checked;
+            
+            preview.style.fontWeight = FONT_WEIGHTS[weight];
+            preview.style.fontStyle = isItalic ? 'italic' : 'normal';
+            
+            // Update image preview
+            debouncedUpdatePreview();
+        }
+
+        // Font weight mappings
+        const FONT_WEIGHTS = {
+            'thin': 100,
+            'extralight': 200,
+            'light': 300,
+            'regular': 400,
+            'medium': 500,
+            'semibold': 600,
+            'bold': 700,
+            'extrabold': 800,
+            'black': 900
+        };
+
+        // Add event listeners for all form inputs
+        function addFormListeners() {
+            // Text inputs with immediate feedback
+            document.querySelectorAll('input[name="banner_text[]"]').forEach(input => {
+                input.addEventListener('input', () => {
+                    console.log('Text input changed');
+                    debouncedUpdatePreview();
+                });
+            });
+
+            // Font size slider
+            const fontSizeInput = document.getElementById('font_size');
+            const fontSizeValue = document.getElementById('fontSizeValue');
+            fontSizeInput.addEventListener('input', () => {
+                fontSizeValue.textContent = `${fontSizeInput.value}px`;
+                debouncedUpdatePreview();
+            });
+
+            // Font controls
+            document.getElementById('font_weight').addEventListener('change', updateFontPreview);
+            document.getElementById('fontItalic').addEventListener('change', updateFontPreview);
+
+            // Color inputs
+            document.getElementById('text_color').addEventListener('input', debouncedUpdatePreview);
+            document.getElementById('banner_color').addEventListener('input', debouncedUpdatePreview);
+        }
+
+        // Preview uploaded image
+        document.getElementById('image').addEventListener('change', function(e) {
+            const preview = document.getElementById('imagePreview');
+            const file = e.target.files[0];
+            
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    preview.src = e.target.result;
+                    preview.style.display = 'block';
+                    console.log('Image loaded, updating preview');
+                    updatePreview();
+                }
+                reader.readAsDataURL(file);
+            }
+        });
+
+        // Initialize default selections and listeners
+        document.querySelector('.position-option[data-position="top"]').classList.add('selected');
+        document.querySelector('.text-align-option[data-align="left"]').classList.add('selected');
+        updateFontPreview();
+        addFormListeners();
+
+        // Prevent form submission (we're handling updates in real-time)
+        document.getElementById('uploadForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+        });
+    </script>
+</body>
+</html> 
